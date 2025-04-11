@@ -2,7 +2,6 @@ provider "aws" {
   region = "us-east-1"  
 }
 
-
 resource "aws_route53_zone" "public_zone" {
   name = "example.com"  
 
@@ -11,9 +10,8 @@ resource "aws_route53_zone" "public_zone" {
   }
 }
 
-
 resource "aws_route53_health_check" "prod_health_check" {
-  fqdn              = "prod.example.com"  n
+  fqdn              = "prod.example.com"
   type              = "HTTP"
   resource_path     = "/health"
   failure_threshold = 3
@@ -27,7 +25,7 @@ resource "aws_route53_health_check" "prod_health_check" {
 }
 
 resource "aws_route53_health_check" "prodbackup_health_check" {
-  fqdn              = "prodbackup.example.com"  
+  fqdn              = "prodbackup.example.com"
   type              = "HTTP"
   resource_path     = "/health"
   failure_threshold = 3
@@ -39,63 +37,6 @@ resource "aws_route53_health_check" "prodbackup_health_check" {
     Name = "prodbackup-health-check"
   }
 }
-
-
-resource "aws_lb" "prod_alb" {
-  name               = "prod-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups   = [aws_security_group.sg.id]
-  subnets           = [aws_subnet.subnet_1.id, aws_subnet.subnet_2.id]
-  enable_deletion_protection = false
-
-  tags = {
-    Name = "prod-alb"
-  }
-}
-
-
-resource "aws_lb" "prod_nlb" {
-  name               = "prod-nlb"
-  internal           = false
-  load_balancer_type = "network"
-  security_groups   = [aws_security_group.sg.id]
-  subnets           = [aws_subnet.subnet_1.id, aws_subnet.subnet_2.id]
-  enable_deletion_protection = false
-
-  tags = {
-    Name = "prod-nlb"
-  }
-}
-
-
-resource "aws_lb" "prodbackup_alb" {
-  name               = "prodbackup-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups   = [aws_security_group.sg.id]
-  subnets           = [aws_subnet.subnet_1.id, aws_subnet.subnet_2.id]
-  enable_deletion_protection = false
-
-  tags = {
-    Name = "prodbackup-alb"
-  }
-}
-
-
-resource "aws_lb" "prodbackup_nlb" {
-  name               = "prodbackup-nlb"
-  internal           = false
-  load_balancer_type = "network"
-  security_groups   = [aws_security_group.sg.id]
-  subnets           = [aws_subnet.subnet_1.id, aws_subnet.subnet_2.id]
-  enable_deletion_protection = false
-
-  tags = {
-    Name = "prodbackup-nlb"
-  }
-}
-
 
 resource "aws_route53_record" "prod_alb_failover_record" {
   zone_id = aws_route53_zone.public_zone.id
@@ -117,7 +58,6 @@ resource "aws_route53_record" "prod_alb_failover_record" {
   }
 }
 
-
 resource "aws_route53_record" "prod_nlb_failover_record" {
   zone_id = aws_route53_zone.public_zone.id
   name    = "backend.example.com"  
@@ -137,7 +77,6 @@ resource "aws_route53_record" "prod_nlb_failover_record" {
     Name = "prod-nlb-failover-record"
   }
 }
-
 
 resource "aws_route53_record" "prodbackup_alb_failover_record" {
   zone_id = aws_route53_zone.public_zone.id
@@ -159,7 +98,6 @@ resource "aws_route53_record" "prodbackup_alb_failover_record" {
   }
 }
 
-
 resource "aws_route53_record" "prodbackup_nlb_failover_record" {
   zone_id = aws_route53_zone.public_zone.id
   name    = "backend.example.com"  
@@ -179,6 +117,7 @@ resource "aws_route53_record" "prodbackup_nlb_failover_record" {
     Name = "prodbackup-nlb-failover-record"
   }
 }
+
 resource "aws_route53_record" "prod_failover_record" {
   zone_id = data.aws_route53_zone.main.id
   name    = "prod.example.com"
@@ -199,3 +138,4 @@ resource "aws_route53_record" "prod_failover_record" {
     }
   }
 }
+
