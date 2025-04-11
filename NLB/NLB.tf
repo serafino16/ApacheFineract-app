@@ -138,24 +138,31 @@ resource "aws_lb_listener" "nlb_listener_prodbackup" {
     target_group_arn = aws_lb_target_group.loan_management_backend_prodbackup.arn
   }
 }
-resource "aws_security_group" "backend_sg" {
-  name        = "backend-sg"
-  description = "Security group for Backend NLB"
-  vpc_id      = aws_vpc.main.id
-
+resource "aws_security_group" "nlb_target_sg" {
+  name        = "nlb-target-sg"
+  description = "Security group for NLB targets"
+  
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["192.168.100.0/24"]  
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["192.168.100.0/24"]  
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]  
   }
+}
 
   tags = {
     Name = "backend-sg"
