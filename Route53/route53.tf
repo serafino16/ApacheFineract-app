@@ -179,4 +179,23 @@ resource "aws_route53_record" "prodbackup_nlb_failover_record" {
     Name = "prodbackup-nlb-failover-record"
   }
 }
-
+resource "aws_route53_record" "prod_failover_record" {
+  zone_id = data.aws_route53_zone.main.id
+  name    = "prod.example.com"
+  type    = "A"
+  ttl     = 60
+  failover_routing_policy {
+    primary {
+      endpoint {
+        dns_name = aws_db_instance.rds_instance["eu-west-1"].endpoint
+        evaluate_target_health = true
+      }
+    }
+    secondary {
+      endpoint {
+        dns_name = aws_db_instance.rds_read_replica["eu-west-2"].endpoint
+        evaluate_target_health = true
+      }
+    }
+  }
+}
