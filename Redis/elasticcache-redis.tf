@@ -9,14 +9,6 @@ provider "aws" {
   region = var.prod_backup_region
 }
 
-resource "aws_vpc" "vpc_prodbackup" {
-  provider = aws.dev
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
-  enable_dns_hostnames = true
-}
-
-
 
 
 resource "aws_elasticache_subnet_group" "redis_subnet_group_prodbackup" {
