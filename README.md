@@ -22,6 +22,10 @@ Storage: for filesystem is used efs with replications in diffrent regions and da
 
 Event driven system with SQS and Lambda for Loan managment and Client Data Managment.
 
+RDS is configured in active-passive mode in prod/prodbackup with:  instances, security groups, subnet groups, parameter groups, a read replica, DNS failover routing, and backup plans across multiple AWS regions defined in the regions variable for high availability and resilience.
+
+Redis ElastiCache is configured in active-passive mode in prod/prodbackup with: replication groups with Multi-AZ support, snapshot backups, and environment-specific security groups in both Dev and Prod AWS regions, including a backup Redis cluster for Prod
+
 WAF: firewall rules for every VPC and SQL injection protection for RDS.
 
 
